@@ -78,6 +78,12 @@ public class WordNet {
 
    // do unit testing of this class
    public static void main(String[] args) {
-
+      String synset = "wordnet/examples/synsets11.txt";
+      String hypernym = "wordnet/examples/hypernymsManyPathsOneAncestor.txt";
+      WordNet net = new WordNet(synset, hypernym);
+      net.nounsSet();
+      System.out.println(net.isNoun("a"));
+      System.out.println(net.isNoun("b"));
+      System.out.println(net.isNoun("z"));
    }
 }
