@@ -1,4 +1,5 @@
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WordNet {
 
@@ -15,19 +16,16 @@ public class WordNet {
 	}
 
 	private void readSynsets(String synsets) {
-		// 36,AND_circuit AND_gate,a circuit in a computer that fires only when all of its inputs fire
+		// 36,AND_circuit AND_gate,a circuit in a
+		// computer that fires only when all of its inputs fire
 		In ssIn = new In(synsets);
 		String[] lines = ssIn.readAllStrings();
 		for (String line : lines) {
 			String[] lex = line.split(",");
-			try {
-				Integer id = Integer.parseInt(lex[0]);
-				for (String l : lex[1].split(" "))
-					syns.put(l, id);
-				glossMap.put(id, lex[2]);
-			} catch (Exception e) {
-				throw new IllegalArgumentException();
-			}
+			int id = Integer.parseInt(lex[0]);
+			for (String l : lex[1].split(" "))
+				syns.put(l, id);
+			glossMap.put(id, lex[2]);
 		}
 	}
 
@@ -38,13 +36,9 @@ public class WordNet {
 		String[] lines = hnIn.readAllStrings();
 		for (String line : lines) {
 			String[] lex = line.split(",");
-			try {
-				Integer id = Integer.parseInt(lex[0]);
-				for (int i = 1; i < lex.length; i++)
-					hg.addEdge(id, Integer.parseInt(lex[i]));
-			} catch (Exception e) {
-				throw new IllegalArgumentException();
-			}
+			int id = Integer.parseInt(lex[0]);
+			for (int i = 1; i < lex.length; i++)
+				hg.addEdge(id, Integer.parseInt(lex[i]));
 		}
 	}
 
@@ -63,7 +57,8 @@ public class WordNet {
 		return sap.length(syns.get(nounA), syns.get(nounB));
 	}
 
-	// a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
+	// a synset (second field of synsets.txt) that is
+	// the common ancestor of nounA and nounB
 	// in a shortest ancestral path (defined below)
 	public String sap(String nounA, String nounB) {
 		int id = sap.ancestor(syns.get(nounA), syns.get(nounB));
@@ -76,7 +71,8 @@ public class WordNet {
 	// do unit testing of this class
 	public static void main(String[] args) {
 		String synset = "wordnet/examples/synsets11.txt";
-		String hypernym = "wordnet/examples/hypernymsManyPathsOneAncestor.txt";
+		String hypernym =
+				"wordnet/examples/hypernymsManyPathsOneAncestor.txt";
 		WordNet net = new WordNet(synset, hypernym);
 		System.out.println(net.isNoun("a"));
 		System.out.println(net.isNoun("b"));
