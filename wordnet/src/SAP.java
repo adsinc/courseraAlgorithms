@@ -1,13 +1,25 @@
 public class SAP {
 
+   private Digraph G;
+
    // constructor takes a digraph (not necessarily a DAG)
    public SAP(Digraph G) {
-
+      this.G = G;
    }
 
    // length of shortest ancestral path between v and w; -1 if no such path
    public int length(int v, int w) {
-      return -1;
+      BreadthFirstDirectedPaths sv = new BreadthFirstDirectedPaths(G, v);
+      if(sv.hasPathTo(w)) return sv.distTo(v);
+      BreadthFirstDirectedPaths sw = new BreadthFirstDirectedPaths(G, w);
+      int len = -1;
+      for(int i = 0; i < G.V(); i++) {
+         if(sv.hasPathTo(i) && sw.hasPathTo(i)) {
+            int l = sv.distTo(i) + sw.distTo(i);
+            if(l < len || len == -1) len = l;
+         }
+      }
+      return len;
    }
 
    // a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
