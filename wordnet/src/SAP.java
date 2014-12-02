@@ -24,7 +24,21 @@ public class SAP {
 
    // a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
    public int ancestor(int v, int w) {
-      return -1;
+      BreadthFirstDirectedPaths sv = new BreadthFirstDirectedPaths(G, v);
+      if(sv.hasPathTo(w)) return sv.distTo(v);
+      BreadthFirstDirectedPaths sw = new BreadthFirstDirectedPaths(G, w);
+      int len = -1;
+      int a = -1;
+      for(int i = 0; i < G.V(); i++) {
+         if(sv.hasPathTo(i) && sw.hasPathTo(i)) {
+            int l = sv.distTo(i) + sw.distTo(i);
+            if(l < len || len == -1) {
+               len = l;
+               a = i;
+            }
+         }
+      }
+      return a;
    }
 
    // length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path
