@@ -4,12 +4,14 @@ public class WordNet {
 
    private Map<Integer, Set<String>> synsetsMap = new HashMap<>();
    private Map<Integer, String> glossMap = new HashMap<>();
-   private Map<Integer, Set<Integer>> hypernymsMap = new HashMap<>();
+   private Digraph hg;
+   private SAP sap;
 
    // constructor takes the name of the two input files
    public WordNet(String synsets, String hypernyms) {
       readSynsets(synsets);
       readHypernyms(hypernyms);
+      sap = new SAP(hg);
    }
 
    private void readSynsets(String synsets) {
@@ -31,6 +33,7 @@ public class WordNet {
    }
 
    private void readHypernyms(String hypernyms) {
+      hg = new Digraph(glossMap.size());
       //164,21012,56099
       In hnIn = new In(hypernyms);
       String[] lines = hnIn.readAllStrings();
@@ -38,10 +41,8 @@ public class WordNet {
          String[] lex = line.split(",");
          try {
             Integer id = Integer.parseInt(lex[0]);
-            Set<Integer> hset = new HashSet<>();
             for (int i = 1; i < lex.length; i++)
-               hset.add(Integer.parseInt(lex[i]));
-            hypernymsMap.put(id, hset);
+               hg.addEdge(id, Integer.parseInt(lex[i]));
          } catch (Exception e) {
             throw new IllegalArgumentException();
          }
@@ -67,7 +68,8 @@ public class WordNet {
 
    // distance between nounA and nounB (defined below)
    public int distance(String nounA, String nounB) {
-      return -1;
+
+//      return sap.length();
    }
 
    // a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
