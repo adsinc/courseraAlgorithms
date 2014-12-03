@@ -27,7 +27,6 @@ public class SAP {
 	// shortest ancestral path; -1 if no such path
 	public int ancestor(int v, int w) {
 		BreadthFirstDirectedPaths sv = new BreadthFirstDirectedPaths(G, v);
-		if (sv.hasPathTo(w)) return sv.distTo(v);
 		BreadthFirstDirectedPaths sw = new BreadthFirstDirectedPaths(G, w);
 		int len = -1;
 		int a = -1;
