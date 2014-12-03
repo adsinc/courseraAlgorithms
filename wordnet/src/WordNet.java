@@ -23,8 +23,10 @@ public class WordNet {
         for (String line : lines) {
             String[] lex = line.split(",");
             int id = Integer.parseInt(lex[0]);
-            for (String l : lex[1].split(" "))
+            for (String l : lex[1].split(" ")) {
+                if(syns.containsKey(l)) System.out.println("contains " + l);
                 syns.put(l, id);
+            }
             glossMap.put(id, lex[2]);
         }
     }
