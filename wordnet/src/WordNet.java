@@ -19,7 +19,7 @@ public class WordNet {
         // 36,AND_circuit AND_gate,a circuit in a
         // computer that fires only when all of its inputs fire
         In ssIn = new In(synsets);
-        String[] lines = ssIn.readAllStrings();
+        String[] lines = ssIn.readAllLines();
         for (String line : lines) {
             String[] lex = line.split(",");
             int id = Integer.parseInt(lex[0]);
@@ -33,7 +33,7 @@ public class WordNet {
         hg = new Digraph(glossMap.size());
         //164,21012,56099
         In hnIn = new In(hypernyms);
-        String[] lines = hnIn.readAllStrings();
+        String[] lines = hnIn.readAllLines();
         for (String line : lines) {
             String[] lex = line.split(",");
             int id = Integer.parseInt(lex[0]);
@@ -70,12 +70,12 @@ public class WordNet {
 
     // do unit testing of this class
     public static void main(String[] args) {
-//        String synset = "wordnet/examples/synsets.txt";
-//        String hypernym =
-//                "wordnet/examples/hypernyms.txt";
-//        WordNet net = new WordNet(synset, hypernym);
-//        System.out.println(net.isNoun("a"));
-//        System.out.println(net.isNoun("b"));
-//        System.out.println(net.isNoun("z"));
+        String synset = "wordnet/examples/synsets1000-subgraph.txt";
+        String hypernym =
+                "wordnet/examples/hypernyms1000-subgraph.txt";
+        WordNet net = new WordNet(synset, hypernym);
+        System.out.println(net.isNoun("a"));
+        System.out.println(net.isNoun("b"));
+        System.out.println(net.isNoun("z"));
     }
 }
