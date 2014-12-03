@@ -4,7 +4,7 @@ import java.util.Map;
 public class SAP {
 
     private Map<Integer, BreadthFirstDirectedPaths> cache = new HashMap<>();
-    int V;
+    private int V;
 
     // constructor takes a digraph (not necessarily a DAG)
     public SAP(Digraph G) {
