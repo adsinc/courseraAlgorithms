@@ -11,7 +11,7 @@ public class SAP {
 	// -1 if no such path
 	public int length(int v, int w) {
 		BreadthFirstDirectedPaths sv = new BreadthFirstDirectedPaths(G, v);
-		if (sv.hasPathTo(w)) return sv.distTo(v);
+		if (sv.hasPathTo(w)) return sv.distTo(w);
 		BreadthFirstDirectedPaths sw = new BreadthFirstDirectedPaths(G, w);
 		int len = -1;
 		for (int i = 0; i < G.V(); i++) {
