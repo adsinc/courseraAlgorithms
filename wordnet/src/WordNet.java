@@ -14,7 +14,16 @@ public class WordNet {
     public WordNet(String synsets, String hypernyms) {
         readSynsets(synsets);
         readHypernyms(hypernyms);
+        if (!isRootedDAG(hg)) throw new IllegalArgumentException();
         sap = new SAP(hg);
+    }
+
+    private boolean isRootedDAG(Digraph hg) {
+        int roots = 0;
+        for (int i = 0; i < hg.V(); i++) {
+            if(!hg.adj(i).iterator().hasNext()) roots++;
+        }
+        return roots == 1;
     }
 
     private void readSynsets(String synsets) {
