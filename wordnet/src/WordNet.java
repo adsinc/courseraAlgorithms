@@ -66,10 +66,15 @@ public class WordNet {
     // in a shortest ancestral path (defined below)
     public String sap(String nounA, String nounB) {
         int id = sap.ancestor(syns.get(nounA), syns.get(nounB));
+        String res = null;
         for (Map.Entry<String, Set<Integer>> e : syns.entrySet()) {
-            if (e.getValue().contains(id)) return e.getKey();
+            if (e.getValue().contains(id)) {
+                if(res != null) res += " ";
+                else res = "";
+                res += e.getKey();
+            }
         }
-        return null;
+        return res;
     }
 
     // do unit testing of this class
@@ -78,6 +83,7 @@ public class WordNet {
         String hypernym =
                 "wordnet/examples/hypernyms.txt";
         WordNet net = new WordNet(synset, hypernym);
-        System.out.println(net.distance("largesse", "Austronesia"));
+        System.out.println(net.sap("festoon", "Aphis_fabae"));
+        System.out.println(net.distance("festoon", "Aphis_fabae"));
     }
 }
