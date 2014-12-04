@@ -64,13 +64,14 @@ public class WordNet {
 
     // is the word a WordNet noun?
     public boolean isNoun(String word) {
+        checkArg(word);
         return syns.keySet().contains(word);
     }
 
     // distance between nounA and nounB (defined below)
     public int distance(String nounA, String nounB) {
-        if (!syns.containsKey(nounA) || !syns.containsKey(nounB))
-            throw new IllegalArgumentException();
+        checkArg(nounA);
+        checkArg(nounB);
         return sap.length(syns.get(nounA), syns.get(nounB));
     }
 
@@ -78,17 +79,24 @@ public class WordNet {
     // the common ancestor of nounA and nounB
     // in a shortest ancestral path (defined below)
     public String sap(String nounA, String nounB) {
-        if (!syns.containsKey(nounA) || !syns.containsKey(nounB))
-            throw new IllegalArgumentException();
+        checkArg(nounA);
+        checkArg(nounB);
         int id = sap.ancestor(syns.get(nounA), syns.get(nounB));
         return synMap.get(id);
+    }
+
+    private void checkArg(String word) {
+        if (word == null)
+            throw new NullPointerException();
+        if (!syns.containsKey(word))
+            throw new IllegalArgumentException();
     }
 
     // do unit testing of this class
     public static void main(String[] args) {
         String synset = "wordnet/examples/synsets15.txt";
         String hypernym =
-                "wordnet/examples/hypernyms15Tree.txt";
+                "wordnet/examples/hypernyms15Path.txt";
         WordNet net = new WordNet(synset, hypernym);
         System.out.println(net.sap("invalid", "Aphis_fabae"));
         System.out.println(net.distance("festoon", "invalid"));
