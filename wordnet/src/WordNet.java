@@ -1,11 +1,12 @@
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
 
 public class WordNet {
 
-    private Map<String, Set<Integer>> syns = new HashMap<>();
+    private Map<String, Set<Integer>> syns = new TreeMap<>();
     private Map<Integer, String> glossMap = new HashMap<>();
     private Digraph hg;
     private SAP sap;
@@ -69,7 +70,7 @@ public class WordNet {
         String res = null;
         for (Map.Entry<String, Set<Integer>> e : syns.entrySet()) {
             if (e.getValue().contains(id)) {
-                if(res != null) res += " ";
+                if (res != null) res += " ";
                 else res = "";
                 res += e.getKey();
             }
