@@ -15,14 +15,15 @@ public class WordNet {
         readSynsets(synsets);
         readHypernyms(hypernyms);
         DirectedCycle cycle = new DirectedCycle(hg);
-        if (!isRootedDAG(hg) || cycle.hasCycle()) throw new IllegalArgumentException();
+        if (!isRootedDAG() || cycle.hasCycle())
+            throw new IllegalArgumentException();
         sap = new SAP(hg);
     }
 
-    private boolean isRootedDAG(Digraph hg) {
+    private boolean isRootedDAG() {
         int roots = 0;
         for (int i = 0; i < hg.V(); i++) {
-            if(!hg.adj(i).iterator().hasNext()) roots++;
+            if (!hg.adj(i).iterator().hasNext()) roots++;
         }
         return roots == 1;
     }
@@ -68,7 +69,7 @@ public class WordNet {
 
     // distance between nounA and nounB (defined below)
     public int distance(String nounA, String nounB) {
-        if(!syns.containsKey(nounA) || !syns.containsKey(nounB))
+        if (!syns.containsKey(nounA) || !syns.containsKey(nounB))
             throw new IllegalArgumentException();
         return sap.length(syns.get(nounA), syns.get(nounB));
     }
@@ -77,7 +78,7 @@ public class WordNet {
     // the common ancestor of nounA and nounB
     // in a shortest ancestral path (defined below)
     public String sap(String nounA, String nounB) {
-        if(!syns.containsKey(nounA) || !syns.containsKey(nounB))
+        if (!syns.containsKey(nounA) || !syns.containsKey(nounB))
             throw new IllegalArgumentException();
         int id = sap.ancestor(syns.get(nounA), syns.get(nounB));
         return synMap.get(id);
