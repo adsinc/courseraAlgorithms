@@ -1,13 +1,12 @@
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
 
 public class WordNet {
 
-    private Map<String, Set<Integer>> syns = new TreeMap<>();
-    private Map<Integer, String> glossMap = new HashMap<>();
+    private Map<String, Set<Integer>> syns = new HashMap<>();
+    private Map<Integer, String> synMap = new HashMap<>();
     private Digraph hg;
     private SAP sap;
 
@@ -30,12 +29,12 @@ public class WordNet {
                 if (!syns.containsKey(l)) syns.put(l, new HashSet<Integer>());
                 syns.get(l).add(id);
             }
-            glossMap.put(id, lex[2]);
+            synMap.put(id, lex[1]);
         }
     }
 
     private void readHypernyms(String hypernyms) {
-        hg = new Digraph(glossMap.size());
+        hg = new Digraph(synMap.size());
         //164,21012,56099
         In hnIn = new In(hypernyms);
         String[] lines = hnIn.readAllLines();
@@ -67,15 +66,7 @@ public class WordNet {
     // in a shortest ancestral path (defined below)
     public String sap(String nounA, String nounB) {
         int id = sap.ancestor(syns.get(nounA), syns.get(nounB));
-        String res = null;
-        for (Map.Entry<String, Set<Integer>> e : syns.entrySet()) {
-            if (e.getValue().contains(id)) {
-                if (res != null) res += " ";
-                else res = "";
-                res += e.getKey();
-            }
-        }
-        return res;
+        return synMap.get(id);
     }
 
     // do unit testing of this class
