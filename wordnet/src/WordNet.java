@@ -14,7 +14,8 @@ public class WordNet {
     public WordNet(String synsets, String hypernyms) {
         readSynsets(synsets);
         readHypernyms(hypernyms);
-        if (!isRootedDAG(hg)) throw new IllegalArgumentException();
+        DirectedCycle cycle = new DirectedCycle(hg);
+        if (!isRootedDAG(hg) || cycle.hasCycle()) throw new IllegalArgumentException();
         sap = new SAP(hg);
     }
 
@@ -67,6 +68,8 @@ public class WordNet {
 
     // distance between nounA and nounB (defined below)
     public int distance(String nounA, String nounB) {
+        if(!syns.containsKey(nounA) || !syns.containsKey(nounB))
+            throw new IllegalArgumentException();
         return sap.length(syns.get(nounA), syns.get(nounB));
     }
 
@@ -74,17 +77,19 @@ public class WordNet {
     // the common ancestor of nounA and nounB
     // in a shortest ancestral path (defined below)
     public String sap(String nounA, String nounB) {
+        if(!syns.containsKey(nounA) || !syns.containsKey(nounB))
+            throw new IllegalArgumentException();
         int id = sap.ancestor(syns.get(nounA), syns.get(nounB));
         return synMap.get(id);
     }
 
     // do unit testing of this class
     public static void main(String[] args) {
-        String synset = "wordnet/examples/synsets.txt";
+        String synset = "wordnet/examples/synsets15.txt";
         String hypernym =
-                "wordnet/examples/hypernyms.txt";
+                "wordnet/examples/hypernyms15Tree.txt";
         WordNet net = new WordNet(synset, hypernym);
-        System.out.println(net.sap("festoon", "Aphis_fabae"));
-        System.out.println(net.distance("festoon", "Aphis_fabae"));
+        System.out.println(net.sap("invalid", "Aphis_fabae"));
+        System.out.println(net.distance("festoon", "invalid"));
     }
 }
