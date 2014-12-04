@@ -1,9 +1,11 @@
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class WordNet {
 
-    private Map<String, Integer> syns = new HashMap<>();
+    private Map<String, Set<Integer>> syns = new HashMap<>();
     private Map<Integer, String> glossMap = new HashMap<>();
     private Digraph hg;
     private SAP sap;
@@ -24,8 +26,8 @@ public class WordNet {
             String[] lex = line.split(",");
             int id = Integer.parseInt(lex[0]);
             for (String l : lex[1].split(" ")) {
-                if(syns.containsKey(l)) System.out.println("contains " + l);
-                syns.put(l, id);
+                if(!syns.containsKey(l)) syns.put(l, new HashSet<Integer>());
+                syns.get(l).add(id);
             }
             glossMap.put(id, lex[2]);
         }
@@ -64,20 +66,18 @@ public class WordNet {
     // in a shortest ancestral path (defined below)
     public String sap(String nounA, String nounB) {
         int id = sap.ancestor(syns.get(nounA), syns.get(nounB));
-        for (Map.Entry<String, Integer> e : syns.entrySet()) {
-            if (id == e.getValue()) return e.getKey();
+        for (Map.Entry<String, Set<Integer>> e : syns.entrySet()) {
+            if (e.getValue().contains(id)) return e.getKey();
         }
         return null;
     }
 
     // do unit testing of this class
     public static void main(String[] args) {
-        String synset = "wordnet/examples/synsets1000-subgraph.txt";
+        String synset = "wordnet/examples/synsets.txt";
         String hypernym =
-                "wordnet/examples/hypernyms1000-subgraph.txt";
+                "wordnet/examples/hypernyms.txt";
         WordNet net = new WordNet(synset, hypernym);
-        System.out.println(net.isNoun("a"));
-        System.out.println(net.isNoun("b"));
-        System.out.println(net.isNoun("z"));
+        System.out.println(net.distance("largesse", "Austronesia"));
     }
 }
