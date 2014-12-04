@@ -26,7 +26,7 @@ public class WordNet {
             String[] lex = line.split(",");
             int id = Integer.parseInt(lex[0]);
             for (String l : lex[1].split(" ")) {
-                if(!syns.containsKey(l)) syns.put(l, new HashSet<Integer>());
+                if (!syns.containsKey(l)) syns.put(l, new HashSet<Integer>());
                 syns.get(l).add(id);
             }
             glossMap.put(id, lex[2]);

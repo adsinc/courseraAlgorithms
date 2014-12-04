@@ -3,8 +3,8 @@ public class SAP {
     private Digraph G;
 
     // constructor takes a digraph (not necessarily a DAG)
-    public SAP(Digraph DG) {
-        G = new Digraph(DG);
+    public SAP(Digraph G) {
+        this.G = new Digraph(G);
     }
 
     // length of shortest ancestral path between v and w;
