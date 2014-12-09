@@ -1,6 +1,9 @@
+import java.awt.*;
+
 public class SeamCarver {
 
     private Picture picture;
+	private final static int BorderEnergy = 195075;
 
     /**
      * create a seam carver object based on the given picture
@@ -49,8 +52,20 @@ public class SeamCarver {
         if(x < 0 || y < 0 
                 || x > width() - 1 || y > height() - 1)
             throw new IndexOutOfBoundsException();
-        return -1;
+		if(x == 0 || y == 0
+				|| x == width() - 1 || y == height() - 1)
+			return BorderEnergy;
+
+        return sqGradient(picture.get(x - 1, y), picture.get(x + 1, y))
+				+ sqGradient(picture.get(x, y - 1), picture.get(x, y + 1));
     }
+
+	private int sqGradient(Color c1, Color c2) {
+		int rd = c1.getRed() - c2.getRed();
+		int gd = c1.getGreen() - c2.getGreen();
+		int bd = c1.getBlue() - c2.getBlue();
+		return rd * rd + gd * gd + bd * bd;
+	}
 
     /**
      * sequence of indices for horizontal seam
@@ -90,6 +105,8 @@ public class SeamCarver {
 
 	private void checkSeam(int[] seam, int reqSize, int reqRange) {
 		if(seam == null) throw new NullPointerException();
+		if(reqSize <= 1 || reqRange <= 1)
+			throw new IllegalArgumentException();
 		if(seam.length != reqSize)
 			throw new IllegalArgumentException("seam.length must be " + reqSize);
 		if(seam.length > 1) {
