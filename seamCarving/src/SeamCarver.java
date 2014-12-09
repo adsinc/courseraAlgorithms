@@ -76,7 +76,7 @@ public class SeamCarver {
      * @param seam
      */
     public void removeHorizontalSeam(int[] seam) {
-		checkSeam(seam, width());
+		checkSeam(seam, width(), height());
     }
 
     /**
@@ -85,12 +85,25 @@ public class SeamCarver {
      * @param seam
      */
     public void removeVerticalSeam(int[] seam) {
-		checkSeam(seam, height());
+		checkSeam(seam, height(), width());
     }
 
-	private void checkSeam(int[] seam, int required) {
+	private void checkSeam(int[] seam, int reqSize, int reqRange) {
 		if(seam == null) throw new NullPointerException();
-		if(seam.length != required)
-			throw new IllegalArgumentException("seam.length must be " + required);
+		if(seam.length != reqSize)
+			throw new IllegalArgumentException("seam.length must be " + reqSize);
+		if(seam.length > 1) {
+			int prev = -1;
+			for(int v : seam) {
+				if(v < 0 || v > reqRange - 1)
+					throw new IllegalArgumentException();
+				if(prev > 0) {
+					int diff = prev - v;
+					if(diff < -1 || diff > 1)
+						throw new IllegalArgumentException();
+				}
+				prev = v;
+			}
+		}
 	}
 }
