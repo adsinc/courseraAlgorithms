@@ -20,7 +20,7 @@ public class SeamCarver {
      * @return
      */
     public Picture picture() {
-        return null;
+        return picture;
     }
 
     /**
