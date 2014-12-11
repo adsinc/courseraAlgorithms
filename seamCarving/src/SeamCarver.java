@@ -1,4 +1,7 @@
 import java.awt.*;
+import java.util.Arrays;
+
+import static java.lang.Math.min;
 
 public class SeamCarver {
 
@@ -82,7 +85,48 @@ public class SeamCarver {
      * @return
      */
     public int[] findVerticalSeam() {
-        return null;
+        double[][] ens = new double[width()][height()];
+        int[][] paths = new int[width()][height()];
+        for(int x = 0; x < width(); x++)
+            for(int y = 0; y < height(); y++) {
+                ens[x][y] = energy(x, y);
+                if(y > 0) {
+                    double val = ens[x][y - 1];
+                    paths[x][y] = x;
+                    if(x > 0) {
+                        double m = ens[x - 1][y - 1];
+                        if(m < val) {
+                            val = m;
+                            paths[x][y] = x - 1;
+                        }
+                    }
+                    if(x < width() - 1) {
+                        double m = ens[x + 1][y - 1];
+                        if(m < val) {
+                            val = m;
+                            paths[x][y] = x + 1;
+                        }
+                    }
+                    ens[x][y] += val;
+                } else paths[x][y] = 0;
+            }
+
+        int[] res = new int[height()];
+
+        //todo
+        for(int y = height() - 1; y >= 0; y--) {
+            int minidx = 0;
+            double min = ens[minidx][height() - 1];
+            for (int x = 0; x < width(); x++) {
+                double val = ens[x][y];
+                if (val < min) {
+                    min = val;
+                    minidx = x;
+                }
+            }
+            res[y] = minidx;
+        }
+        return res;
     }
 
     /**

@@ -67,13 +67,13 @@ public class PrintSeams {
 
     public static void main(String[] args)
     {
-        Picture inputImg = new Picture(args[0]);
+        Picture inputImg = new Picture("10x12.png");
         System.out.printf("image is %d columns by %d rows\n", inputImg.width(), inputImg.height());
         //inputImg.show();        
         SeamCarver sc = new SeamCarver(inputImg);
         
-        System.out.printf("Displaying horizontal seam calculated.\n");
-        printHorizontalSeam(sc);
+//        System.out.printf("Displaying horizontal seam calculated.\n");
+//        printHorizontalSeam(sc);
 
         System.out.printf("Displaying vertical seam calculated.\n");
         printVerticalSeam(sc);
