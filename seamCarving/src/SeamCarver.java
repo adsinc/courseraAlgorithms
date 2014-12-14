@@ -3,7 +3,6 @@ import java.awt.Color;
 public class SeamCarver {
 
     private Picture picture;
-    private final static int BorderEnergy = 195075;
 
     /**
      * create a seam carver object based on the given picture
@@ -52,9 +51,10 @@ public class SeamCarver {
         if (x < 0 || y < 0
                 || x > width() - 1 || y > height() - 1)
             throw new IndexOutOfBoundsException();
+        int borderEnergy = 195075;
         if (x == 0 || y == 0
                 || x == width() - 1 || y == height() - 1)
-            return BorderEnergy;
+            return borderEnergy;
 
         return sqGradient(picture.get(x - 1, y), picture.get(x + 1, y))
                 + sqGradient(picture.get(x, y - 1), picture.get(x, y + 1));
@@ -174,6 +174,15 @@ public class SeamCarver {
      */
     public void removeHorizontalSeam(int[] seam) {
         checkSeam(seam, width(), height());
+        Picture newPicture = new Picture(width(), height() - 1);
+        for (int x = 0; x < width(); x++)
+            for (int y = 0; y < height() - 1; y++) {
+                if (y < seam[x])
+                    newPicture.set(x, y, picture.get(x, y));
+                else if (y > seam[x])
+                    newPicture.set(x, y, picture.get(x, y + 1));
+            }
+        picture = newPicture;
     }
 
 
@@ -184,6 +193,15 @@ public class SeamCarver {
      */
     public void removeVerticalSeam(int[] seam) {
         checkSeam(seam, height(), width());
+        Picture newPicture = new Picture(width() - 1, height());
+        for (int y = 0; y < height() - 1; y++)
+            for (int x = 0; x < width() - 1; x++) {
+                if (x < seam[y])
+                    newPicture.set(x, y, picture.get(x, y));
+                else if (x > seam[y])
+                    newPicture.set(x, y, picture.get(x + 1, y));
+            }
+        picture = newPicture;
     }
 
     private void checkSeam(int[] seam, int reqSize, int reqRange) {
