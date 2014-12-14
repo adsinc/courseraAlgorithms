@@ -1,12 +1,9 @@
-import java.awt.*;
-import java.util.Arrays;
-
-import static java.lang.Math.min;
+import java.awt.Color;
 
 public class SeamCarver {
 
     private Picture picture;
-	private final static int BorderEnergy = 195075;
+    private final static int BorderEnergy = 195075;
 
     /**
      * create a seam carver object based on the given picture
@@ -52,23 +49,23 @@ public class SeamCarver {
      * @return
      */
     public double energy(int x, int y) {
-        if(x < 0 || y < 0 
+        if (x < 0 || y < 0
                 || x > width() - 1 || y > height() - 1)
             throw new IndexOutOfBoundsException();
-		if(x == 0 || y == 0
-				|| x == width() - 1 || y == height() - 1)
-			return BorderEnergy;
+        if (x == 0 || y == 0
+                || x == width() - 1 || y == height() - 1)
+            return BorderEnergy;
 
         return sqGradient(picture.get(x - 1, y), picture.get(x + 1, y))
-				+ sqGradient(picture.get(x, y - 1), picture.get(x, y + 1));
+                + sqGradient(picture.get(x, y - 1), picture.get(x, y + 1));
     }
 
-	private int sqGradient(Color c1, Color c2) {
-		int rd = c1.getRed() - c2.getRed();
-		int gd = c1.getGreen() - c2.getGreen();
-		int bd = c1.getBlue() - c2.getBlue();
-		return rd * rd + gd * gd + bd * bd;
-	}
+    private int sqGradient(Color c1, Color c2) {
+        int rd = c1.getRed() - c2.getRed();
+        int gd = c1.getGreen() - c2.getGreen();
+        int bd = c1.getBlue() - c2.getBlue();
+        return rd * rd + gd * gd + bd * bd;
+    }
 
     /**
      * sequence of indices for horizontal seam
@@ -76,7 +73,48 @@ public class SeamCarver {
      * @return
      */
     public int[] findHorizontalSeam() {
-        return null;
+        double[][] ens = new double[width()][height()];
+        int[][] paths = new int[width()][height()];
+        for (int x = 0; x < width(); x++)
+            for (int y = 0; y < height(); y++) {
+                ens[x][y] = energy(x, y);
+                if (x > 0) {
+                    double val = ens[x - 1][y];
+                    paths[x][y] = y;
+                    if (y > 0) {
+                        double m = ens[x - 1][y - 1];
+                        if (m <= val) {
+                            val = m;
+                            paths[x][y] = y - 1;
+                        }
+                    }
+                    if (y < height() - 1) {
+                        double m = ens[x - 1][y + 1];
+                        if (m < val) {
+                            val = m;
+                            paths[x][y] = y + 1;
+                        }
+                    }
+                    ens[x][y] += val;
+                } else paths[x][y] = 0;
+            }
+
+        int minIdx = 0;
+        double min = ens[width() - 1][0];
+        for (int i = 0; i < height(); i++) {
+            double val = ens[width() - 1][i];
+            if (val < min) {
+                min = val;
+                minIdx = i;
+            }
+        }
+
+        int[] res = new int[width()];
+        for (int i = width() - 1; i >= 0; i--) {
+            res[i] = minIdx;
+            minIdx = paths[i][minIdx];
+        }
+        return res;
     }
 
     /**
@@ -87,22 +125,22 @@ public class SeamCarver {
     public int[] findVerticalSeam() {
         double[][] ens = new double[width()][height()];
         int[][] paths = new int[width()][height()];
-        for(int y = 0; y < height(); y++)
-            for(int x = 0; x < width(); x++) {
+        for (int y = 0; y < height(); y++)
+            for (int x = 0; x < width(); x++) {
                 ens[x][y] = energy(x, y);
-                if(y > 0) {
+                if (y > 0) {
                     double val = ens[x][y - 1];
                     paths[x][y] = x;
-                    if(x > 0) {
+                    if (x > 0) {
                         double m = ens[x - 1][y - 1];
-                        if(m <= val) {
+                        if (m <= val) {
                             val = m;
                             paths[x][y] = x - 1;
                         }
                     }
-                    if(x < width() - 1) {
+                    if (x < width() - 1) {
                         double m = ens[x + 1][y - 1];
-                        if(m < val) {
+                        if (m < val) {
                             val = m;
                             paths[x][y] = x + 1;
                         }
@@ -113,16 +151,16 @@ public class SeamCarver {
 
         int minIdx = 0;
         double min = ens[0][height() - 1];
-        for(int i = 0; i < width(); i++) {
+        for (int i = 0; i < width(); i++) {
             double val = ens[i][height() - 1];
-            if(val < min) {
+            if (val < min) {
                 min = val;
                 minIdx = i;
             }
         }
 
         int[] res = new int[height()];
-        for(int i = height() - 1; i >= 0; i--) {
+        for (int i = height() - 1; i >= 0; i--) {
             res[i] = minIdx;
             minIdx = paths[minIdx][i];
         }
@@ -135,7 +173,7 @@ public class SeamCarver {
      * @param seam
      */
     public void removeHorizontalSeam(int[] seam) {
-		checkSeam(seam, width(), height());
+        checkSeam(seam, width(), height());
     }
 
 
@@ -145,27 +183,27 @@ public class SeamCarver {
      * @param seam
      */
     public void removeVerticalSeam(int[] seam) {
-		checkSeam(seam, height(), width());
+        checkSeam(seam, height(), width());
     }
 
-	private void checkSeam(int[] seam, int reqSize, int reqRange) {
-		if(seam == null) throw new NullPointerException();
-		if(reqSize <= 1 || reqRange <= 1)
-			throw new IllegalArgumentException();
-		if(seam.length != reqSize)
-			throw new IllegalArgumentException("seam.length must be " + reqSize);
-		if(seam.length > 1) {
-			int prev = -1;
-			for(int v : seam) {
-				if(v < 0 || v > reqRange - 1)
-					throw new IllegalArgumentException();
-				if(prev > 0) {
-					int diff = prev - v;
-					if(diff < -1 || diff > 1)
-						throw new IllegalArgumentException();
-				}
-				prev = v;
-			}
-		}
-	}
+    private void checkSeam(int[] seam, int reqSize, int reqRange) {
+        if (seam == null) throw new NullPointerException();
+        if (reqSize <= 1 || reqRange <= 1)
+            throw new IllegalArgumentException();
+        if (seam.length != reqSize)
+            throw new IllegalArgumentException("seam.length must be " + reqSize);
+        if (seam.length > 1) {
+            int prev = -1;
+            for (int v : seam) {
+                if (v < 0 || v > reqRange - 1)
+                    throw new IllegalArgumentException();
+                if (prev > 0) {
+                    int diff = prev - v;
+                    if (diff < -1 || diff > 1)
+                        throw new IllegalArgumentException();
+                }
+                prev = v;
+            }
+        }
+    }
 }

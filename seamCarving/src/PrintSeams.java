@@ -72,8 +72,8 @@ public class PrintSeams {
         //inputImg.show();        
         SeamCarver sc = new SeamCarver(inputImg);
         
-//        System.out.printf("Displaying horizontal seam calculated.\n");
-//        printHorizontalSeam(sc);
+        System.out.printf("Displaying horizontal seam calculated.\n");
+        printHorizontalSeam(sc);
 
         System.out.printf("Displaying vertical seam calculated.\n");
         printVerticalSeam(sc);
