@@ -87,15 +87,15 @@ public class SeamCarver {
     public int[] findVerticalSeam() {
         double[][] ens = new double[width()][height()];
         int[][] paths = new int[width()][height()];
-        for(int x = 0; x < width(); x++)
-            for(int y = 0; y < height(); y++) {
+        for(int y = 0; y < height(); y++)
+            for(int x = 0; x < width(); x++) {
                 ens[x][y] = energy(x, y);
                 if(y > 0) {
                     double val = ens[x][y - 1];
                     paths[x][y] = x;
                     if(x > 0) {
                         double m = ens[x - 1][y - 1];
-                        if(m < val) {
+                        if(m <= val) {
                             val = m;
                             paths[x][y] = x - 1;
                         }
@@ -111,20 +111,20 @@ public class SeamCarver {
                 } else paths[x][y] = 0;
             }
 
-        int[] res = new int[height()];
-
-        //todo
-        for(int y = height() - 1; y >= 0; y--) {
-            int minidx = 0;
-            double min = ens[minidx][height() - 1];
-            for (int x = 0; x < width(); x++) {
-                double val = ens[x][y];
-                if (val < min) {
-                    min = val;
-                    minidx = x;
-                }
+        int minIdx = 0;
+        double min = ens[0][height() - 1];
+        for(int i = 0; i < width(); i++) {
+            double val = ens[i][height() - 1];
+            if(val < min) {
+                min = val;
+                minIdx = i;
             }
-            res[y] = minidx;
+        }
+
+        int[] res = new int[height()];
+        for(int i = height() - 1; i >= 0; i--) {
+            res[i] = minIdx;
+            minIdx = paths[minIdx][i];
         }
         return res;
     }
@@ -137,6 +137,7 @@ public class SeamCarver {
     public void removeHorizontalSeam(int[] seam) {
 		checkSeam(seam, width(), height());
     }
+
 
     /**
      * remove vertical seam from current picture

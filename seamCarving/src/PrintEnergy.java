@@ -13,7 +13,7 @@ public class PrintEnergy {
 
     public static void main(String[] args)
     {
-        Picture inputImg = new Picture("3x7.png");
+        Picture inputImg = new Picture("4x6.png");
         System.out.printf("image is %d pixels wide by %d pixels high.\n", inputImg.width(), inputImg.height());
         
         SeamCarver sc = new SeamCarver(inputImg);
