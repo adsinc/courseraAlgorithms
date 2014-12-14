@@ -179,7 +179,7 @@ public class SeamCarver {
             for (int y = 0; y < height() - 1; y++) {
                 if (y < seam[x])
                     newPicture.set(x, y, picture.get(x, y));
-                else if (y > seam[x])
+                else if (y >= seam[x])
                     newPicture.set(x, y, picture.get(x, y + 1));
             }
         picture = newPicture;
@@ -194,11 +194,11 @@ public class SeamCarver {
     public void removeVerticalSeam(int[] seam) {
         checkSeam(seam, height(), width());
         Picture newPicture = new Picture(width() - 1, height());
-        for (int y = 0; y < height() - 1; y++)
+        for (int y = 0; y < height(); y++)
             for (int x = 0; x < width() - 1; x++) {
                 if (x < seam[y])
                     newPicture.set(x, y, picture.get(x, y));
-                else if (x > seam[y])
+                else if (x >= seam[y])
                     newPicture.set(x, y, picture.get(x + 1, y));
             }
         picture = newPicture;
